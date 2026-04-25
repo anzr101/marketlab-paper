@@ -1,3 +1,4 @@
+```python
 """
 MarketLab Paper Viewer
 A Streamlit application showcasing the research paper:
@@ -5,12 +6,6 @@ A Streamlit application showcasing the research paper:
 Framework for Machine-Learning Trading in Indian Equity Markets"
 
 Author: Anzar Shaikh (ORCID 0009-0005-7844-5792)
-
-Inline preview strategy: pre-rendered PNG page images.
-- No iframes (avoids Chrome data-URI blocking)
-- No GitHub raw URLs (avoids Content-Disposition: attachment headers)
-- No external dependencies (no pdf.js, no Google Docs viewer)
-- Native st.image() rendering, works identically in every browser
 """
 
 from pathlib import Path
@@ -29,8 +24,8 @@ st.set_page_config(
         "About": (
             "Research paper viewer for *Bridging the Prediction-Profitability "
             "Gap: A Regime-Aware Gating Framework for Machine-Learning "
-            "Trading in Indian Equity Markets* — Anzar Shaikh, B.E. AI & DS, "
-            "University of Mumbai, 2026."
+            "Trading in Indian Equity Markets* — Anzar Shaikh, "
+            "B.E. AI & DS, University of Mumbai, 2026."
         )
     },
 )
@@ -41,29 +36,172 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    .main .block-container {padding-top: 2rem; padding-bottom: 2rem; max-width: 1100px;}
-    h1, h2, h3 {color: #1f3a5f;}
-    .metric-card {
-        background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
-        padding: 1rem; border-radius: 8px; border-left: 4px solid #1f3a5f;
-        margin-bottom: 0.6rem;
+    /* Layout */
+    .main .block-container {
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+        max-width: 1180px;
     }
-    .citation-block {
-        background: #f8f9fa; padding: 1rem; border-radius: 6px;
-        font-family: 'Courier New', monospace; font-size: 0.85em;
-        white-space: pre-wrap; border: 1px solid #dee2e6;
+
+    /* Headings */
+    h1 {
+        color: #0f2540;
+        font-weight: 700;
+        letter-spacing: -0.02em;
     }
+    h2, h3, h4 {
+        color: #1f3a5f;
+        font-weight: 600;
+    }
+
+    /* Hero subtitle */
+    .hero-subtitle {
+        color: #4a5568;
+        font-size: 1.15rem;
+        font-weight: 400;
+        margin-top: -0.5rem;
+        margin-bottom: 0.8rem;
+    }
+    .hero-author {
+        color: #718096;
+        font-size: 0.95rem;
+        margin-bottom: 1.2rem;
+    }
+
+    /* Badges */
     .badge {
-        display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px;
-        font-size: 0.8em; margin-right: 0.3rem; background: #1f3a5f;
+        display: inline-block;
+        padding: 0.25rem 0.7rem;
+        border-radius: 14px;
+        font-size: 0.78em;
+        font-weight: 500;
+        margin-right: 0.35rem;
+        margin-bottom: 0.3rem;
+        background: linear-gradient(135deg, #1f3a5f 0%, #2d4a6f 100%);
         color: white;
+        letter-spacing: 0.02em;
+    }
+    .badge-outline {
+        background: transparent;
+        color: #1f3a5f;
+        border: 1px solid #1f3a5f;
+    }
+
+    /* Metric cards */
+    [data-testid="stMetric"] {
+        background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+        padding: 1rem 1.2rem;
+        border-radius: 10px;
+        border-left: 4px solid #1f3a5f;
+        box-shadow: 0 1px 3px rgba(15, 37, 64, 0.06);
+    }
+    [data-testid="stMetricLabel"] {
+        font-size: 0.85rem !important;
+        color: #4a5568 !important;
+        font-weight: 500;
+    }
+    [data-testid="stMetricValue"] {
+        font-size: 1.4rem !important;
+        color: #0f2540 !important;
+        font-weight: 700;
+    }
+
+    /* Citation block */
+    .citation-block {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 6px;
+        font-family: 'SFMono-Regular', 'Courier New', monospace;
+        font-size: 0.82em;
+        white-space: pre-wrap;
+        border: 1px solid #dee2e6;
+        line-height: 1.5;
+    }
+
+    /* Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 4px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .stTabs [data-baseweb="tab-list"] button {
+        padding: 0.6rem 1.1rem;
+        border-radius: 8px 8px 0 0;
+        background: transparent;
     }
     .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
-        font-size: 1.05rem; font-weight: 500;
+        font-size: 1.0rem;
+        font-weight: 500;
+        color: #4a5568;
     }
-    .page-image-container {
-        background: #f8f9fa; padding: 1rem; border-radius: 6px;
-        border: 1px solid #dee2e6; margin-bottom: 1rem;
+    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
+        background: #f0f4fa;
+        border-bottom: 3px solid #1f3a5f;
+    }
+    .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] [data-testid="stMarkdownContainer"] p {
+        color: #1f3a5f;
+        font-weight: 600;
+    }
+
+    /* Buttons */
+    .stButton button, .stDownloadButton button, .stLinkButton a {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.15s ease;
+    }
+    .stButton button:hover, .stDownloadButton button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(15, 37, 64, 0.15);
+    }
+
+    /* Page navigator */
+    .page-indicator {
+        text-align: center;
+        font-weight: 600;
+        font-size: 1.05rem;
+        color: #1f3a5f;
+        padding: 0.5rem 0;
+        background: #f0f4fa;
+        border-radius: 8px;
+        margin: 0;
+    }
+
+    /* Section dividers */
+    hr {
+        margin: 2rem 0 1.5rem 0;
+        border: none;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+    }
+    [data-testid="stSidebar"] h2 {
+        color: #0f2540;
+        margin-top: 0;
+    }
+
+    /* Info boxes */
+    [data-testid="stAlert"] {
+        border-radius: 8px;
+    }
+
+    /* Tables */
+    table {
+        font-size: 0.92em;
+    }
+    table th {
+        background: #f0f4fa;
+        color: #1f3a5f;
+        font-weight: 600;
+    }
+
+    /* Captions */
+    .caption {
+        color: #718096;
+        font-size: 0.88rem;
+        font-style: italic;
+        margin-top: 0.4rem;
     }
     </style>
     """,
@@ -79,6 +217,12 @@ FIGURES     = ASSETS / "figures"
 PAPER_PAGES = ASSETS / "paper_pages"
 PDF_PATH    = ASSETS / "marketlab_paper.pdf"
 
+# =====================================================================
+#  SESSION STATE INITIALIZATION
+# =====================================================================
+if "current_page" not in st.session_state:
+    st.session_state.current_page = 1
+
 
 # =====================================================================
 #  HELPERS
@@ -90,11 +234,29 @@ def load_pdf_bytes(path: Path) -> bytes:
 
 @st.cache_data(show_spinner=False)
 def list_paper_pages() -> list:
-    """Return sorted list of pre-rendered paper page image paths."""
     if not PAPER_PAGES.exists():
         return []
-    pages = sorted(PAPER_PAGES.glob("page-*.png"))
-    return pages
+    return sorted(PAPER_PAGES.glob("page-*.png"))
+
+
+def go_to_prev_page(n_pages: int):
+    """Callback for Previous button — fires before next render, so safe."""
+    if st.session_state.current_page > 1:
+        st.session_state.current_page -= 1
+
+
+def go_to_next_page(n_pages: int):
+    """Callback for Next button — fires before next render, so safe."""
+    if st.session_state.current_page < n_pages:
+        st.session_state.current_page += 1
+
+
+def go_to_first(n_pages: int):
+    st.session_state.current_page = 1
+
+
+def go_to_last(n_pages: int):
+    st.session_state.current_page = n_pages
 
 
 # =====================================================================
@@ -105,7 +267,7 @@ with st.sidebar:
     st.caption("Research preprint and supplementary materials")
 
     st.markdown("---")
-    st.markdown("### Author")
+    st.markdown("#### Author")
     st.markdown(
         "**Anzar Shaikh**  \n"
         "B.E. Artificial Intelligence and Data Science  \n"
@@ -118,17 +280,19 @@ with st.sidebar:
     st.markdown("[📧 anzarsk098@gmail.com](mailto:anzarsk098@gmail.com)")
 
     st.markdown("---")
-    st.markdown("### Quick Links")
+    st.markdown("#### Quick Links")
     st.markdown(
-        "[💻 Code on GitHub]"
+        "[💻 Code repository]"
         "(https://github.com/anzr101/marketlab-event_aware)"
     )
-    st.markdown("[📊 Live demo dashboard]"
-                "(https://market-optimization-lab.streamlit.app)")
+    st.markdown(
+        "[📊 Live demo dashboard]"
+        "(https://market-optimization-lab.streamlit.app)"
+    )
 
     st.markdown("---")
     if PDF_PATH.exists():
-        st.markdown("### Download")
+        st.markdown("#### Download")
         with open(PDF_PATH, "rb") as f:
             st.download_button(
                 label="⬇️ Download paper (PDF)",
@@ -140,7 +304,7 @@ with st.sidebar:
             )
 
     st.markdown("---")
-    st.markdown("### Cite this work")
+    st.markdown("#### Cite this work")
     st.code(
         "@misc{shaikh2026marketlab,\n"
         "  author = {Anzar Shaikh},\n"
@@ -156,20 +320,26 @@ with st.sidebar:
 # =====================================================================
 st.title("Bridging the Prediction–Profitability Gap")
 st.markdown(
-    "##### A Regime-Aware Gating Framework for Machine-Learning Trading "
-    "in Indian Equity Markets"
+    '<p class="hero-subtitle">A Regime-Aware Gating Framework '
+    'for Machine-Learning Trading in Indian Equity Markets</p>',
+    unsafe_allow_html=True,
 )
 
 st.markdown(
     '<span class="badge">arXiv preprint</span>'
     '<span class="badge">q-fin.TR</span>'
     '<span class="badge">cs.LG</span>'
-    '<span class="badge">21 pages</span>'
-    '<span class="badge">14 figures</span>',
+    '<span class="badge badge-outline">21 pages</span>'
+    '<span class="badge badge-outline">14 figures</span>'
+    '<span class="badge badge-outline">8 tables</span>',
     unsafe_allow_html=True,
 )
 
-st.markdown("**Anzar Shaikh** — University of Mumbai — April 2026")
+st.markdown(
+    '<p class="hero-author"><strong>Anzar Shaikh</strong> — '
+    'University of Mumbai — April 2026</p>',
+    unsafe_allow_html=True,
+)
 st.markdown("---")
 
 # =====================================================================
@@ -181,7 +351,7 @@ tab_paper, tab_findings, tab_figs, tab_methods, tab_about = st.tabs(
 )
 
 # =====================================================================
-#  TAB 1: PAPER VIEWER (pre-rendered page images)
+#  TAB 1: PAPER VIEWER
 # =====================================================================
 with tab_paper:
     st.markdown("### Full paper")
@@ -191,9 +361,8 @@ with tab_paper:
 
     if n_pages == 0:
         st.error(
-            "Pre-rendered paper pages not found at "
-            f"`{PAPER_PAGES}`. Verify the `assets/paper_pages/` folder "
-            "is included in the repo."
+            f"Pre-rendered paper pages not found at `{PAPER_PAGES}`. "
+            "Verify the `assets/paper_pages/` folder is included in the repo."
         )
         if PDF_PATH.exists():
             with open(PDF_PATH, "rb") as f:
@@ -204,8 +373,14 @@ with tab_paper:
                     mime="application/pdf",
                 )
     else:
+        # Clamp current_page to valid range (defensive)
+        if st.session_state.current_page > n_pages:
+            st.session_state.current_page = n_pages
+        if st.session_state.current_page < 1:
+            st.session_state.current_page = 1
+
         st.caption(
-            f"21 pages, 14 figures, 8 tables. Use the controls below to "
+            "21 pages, 14 figures, 8 tables. Use the controls below to "
             "navigate or scroll through all pages."
         )
 
@@ -246,48 +421,81 @@ with tab_paper:
         )
 
         if view_mode == "📖 Single page":
-            # Page-by-page navigator
-            page_num = st.slider(
-                "Page",
-                min_value=1,
-                max_value=n_pages,
-                value=1,
-                step=1,
-                key="page_slider",
-            )
+            page_num = st.session_state.current_page
 
-            cn1, cn2, cn3 = st.columns([1, 2, 1])
-            with cn1:
-                if st.button("⬅️ Previous", use_container_width=True,
-                             disabled=(page_num == 1),
-                             key="prev_page"):
-                    st.session_state["page_slider"] = max(1, page_num - 1)
-                    st.rerun()
-            with cn2:
+            # Navigation controls — using on_click callbacks (the correct pattern)
+            nav_cols = st.columns([1, 1, 2.5, 1, 1])
+            with nav_cols[0]:
+                st.button(
+                    "⏮️ First",
+                    use_container_width=True,
+                    disabled=(page_num == 1),
+                    key="btn_first",
+                    on_click=go_to_first,
+                    args=(n_pages,),
+                )
+            with nav_cols[1]:
+                st.button(
+                    "⬅️ Previous",
+                    use_container_width=True,
+                    disabled=(page_num == 1),
+                    key="btn_prev",
+                    on_click=go_to_prev_page,
+                    args=(n_pages,),
+                )
+            with nav_cols[2]:
                 st.markdown(
-                    f"<div style='text-align:center; "
-                    f"font-weight:500; padding-top:0.3rem;'>"
-                    f"Page {page_num} of {n_pages}</div>",
+                    f'<div class="page-indicator">'
+                    f'Page {page_num} of {n_pages}'
+                    f'</div>',
                     unsafe_allow_html=True,
                 )
-            with cn3:
-                if st.button("Next ➡️", use_container_width=True,
-                             disabled=(page_num == n_pages),
-                             key="next_page"):
-                    st.session_state["page_slider"] = min(n_pages, page_num + 1)
+            with nav_cols[3]:
+                st.button(
+                    "Next ➡️",
+                    use_container_width=True,
+                    disabled=(page_num == n_pages),
+                    key="btn_next",
+                    on_click=go_to_next_page,
+                    args=(n_pages,),
+                )
+            with nav_cols[4]:
+                st.button(
+                    "Last ⏭️",
+                    use_container_width=True,
+                    disabled=(page_num == n_pages),
+                    key="btn_last",
+                    on_click=go_to_last,
+                    args=(n_pages,),
+                )
+
+            # Optional: jump-to-page selectbox below nav row (no slider conflict)
+            jump_col1, jump_col2, jump_col3 = st.columns([1, 1, 1])
+            with jump_col2:
+                jump = st.selectbox(
+                    "Jump to page",
+                    options=list(range(1, n_pages + 1)),
+                    index=page_num - 1,
+                    key="page_jump",
+                    label_visibility="collapsed",
+                )
+                if jump != page_num:
+                    st.session_state.current_page = jump
                     st.rerun()
 
             st.markdown("")
+
+            # Render the current page image
             st.image(
                 str(pages[page_num - 1]),
                 use_container_width=True,
             )
 
         else:
-            # All pages, scrollable
+            # Scroll-all mode
             st.info(
-                "Showing all 21 pages. Scroll to read; use the sidebar "
-                "Download button to get the PDF."
+                "📜 Showing all 21 pages. Scroll to read top-to-bottom; "
+                "use the sidebar Download button to save the PDF."
             )
             for i, page_path in enumerate(pages, start=1):
                 st.markdown(f"**Page {i} of {n_pages}**")
@@ -301,13 +509,14 @@ with tab_paper:
 with tab_findings:
     st.markdown("### The paradox we identified")
     st.markdown(
-        "An ensemble of 1,386 machine-learning models trained on twenty "
-        "years of NSE data reported a peak coefficient of determination "
-        "of $R^{2}=0.9986$. Yet, when traded over the 2022–2024 "
-        "out-of-sample window, the same models lost **14.02%** "
-        "annually while a passive buy-and-hold benchmark lost only "
-        "0.85%. We call this divergence the **prediction–profitability "
-        "gap**, formalize it mathematically, and propose a resolution."
+        "An ensemble of **1,386 machine-learning models** trained on "
+        "twenty years of NSE data reported a peak coefficient of "
+        "determination of $R^{2}=0.9986$. Yet, when traded over the "
+        "2022–2024 out-of-sample window, the same models lost "
+        "**14.02%** annually while a passive buy-and-hold benchmark "
+        "lost only 0.85%. We call this divergence the "
+        "**prediction–profitability gap**, formalize it mathematically, "
+        "and propose a resolution."
     )
 
     st.markdown("---")
@@ -350,8 +559,8 @@ with tab_findings:
         "The gating layer is **non-expansive** (it can only reduce "
         "exposure, never increase it), **deterministic** (same regime "
         "always produces the same exposure), and **interpretable** "
-        "(every trade is traceable to a categorized event), making "
-        "it compatible with SEBI audit requirements."
+        "(every trade is traceable to a categorized event), making it "
+        "compatible with SEBI audit requirements."
     )
 
     st.markdown("---")
@@ -362,9 +571,9 @@ with tab_findings:
          "−₹10,200", "−₹600",   "₹9,600 saved"),
         ("Fed 75 bp hike",          "2022-06-15", "15.25 h", "99.8%",
          "−₹3,300",  "−₹990",   "₹2,310 saved"),
-        ("Silicon Valley Bank fail","2023-03-10", "1.25 h", "94.2%",
+        ("Silicon Valley Bank fail", "2023-03-10", "1.25 h", "94.2%",
          "−₹7,660",  "−₹1,860", "₹5,800 saved"),
-        ("US–Iran / Red Sea strikes","2024-01-11", "3.5 h", "96.5%",
+        ("US–Iran / Red Sea strikes", "2024-01-11", "3.5 h", "96.5%",
          "−₹4,960",  "−₹800",   "₹4,160 saved"),
     ]
     table_md = (
@@ -581,3 +790,4 @@ with tab_about:
         "App built with Streamlit. Last updated April 2026. "
         "© 2026 Anzar Shaikh. Paper licensed CC BY 4.0."
     )
+```
