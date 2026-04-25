@@ -1,4 +1,4 @@
-```python
+
 """
 MarketLab Paper Viewer
 A Streamlit application showcasing the research paper:
