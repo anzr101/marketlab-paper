@@ -790,4 +790,4 @@ with tab_about:
         "App built with Streamlit. Last updated April 2026. "
         "© 2026 Anzar Shaikh. Paper licensed CC BY 4.0."
     )
-```
+
