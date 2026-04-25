@@ -7,7 +7,6 @@ Framework for Machine-Learning Trading in Indian Equity Markets"
 Author: Anzar Shaikh (ORCID 0009-0005-7844-5792)
 """
 
-import base64
 from pathlib import Path
 
 import streamlit as st
@@ -70,6 +69,22 @@ PDF_PATH = ASSETS / "marketlab_paper.pdf"
 
 
 # ---------------------------------------------------------------------
+#  CONFIG — set these to YOUR GitHub repo for the Streamlit app
+# ---------------------------------------------------------------------
+GITHUB_USER = "anzr101"
+GITHUB_REPO = "marketlab-paper"
+GITHUB_BRANCH = "main"
+PDF_REPO_PATH = "marketlab_streamlit_app/assets/marketlab_paper.pdf"
+GITHUB_PDF_RAW_URL = (
+    f"https://raw.githubusercontent.com/{GITHUB_USER}/"
+    f"{GITHUB_REPO}/{GITHUB_BRANCH}/{PDF_REPO_PATH}"
+)
+GITHUB_PDF_BLOB_URL = (
+    f"https://github.com/{GITHUB_USER}/{GITHUB_REPO}/"
+    f"blob/{GITHUB_BRANCH}/{PDF_REPO_PATH}"
+)
+
+# ---------------------------------------------------------------------
 #  HELPERS
 # ---------------------------------------------------------------------
 @st.cache_data(show_spinner=False)
@@ -77,15 +92,20 @@ def load_pdf_bytes(path: Path) -> bytes:
     return path.read_bytes()
 
 
-def render_pdf_inline(pdf_bytes: bytes, height: int = 900):
-    """Embed a PDF inside the page using a data URI."""
-    b64 = base64.b64encode(pdf_bytes).decode()
+def render_pdf_via_github_url(pdf_url: str, height: int = 900):
+    """Embed a PDF using a GitHub raw URL.
+
+    This avoids Chrome's restrictions on large base64 data-URIs in iframes,
+    which is what causes the 'This page has been blocked by Chrome' error
+    when using the data-URI embed strategy.
+    """
     pdf_iframe = (
-        f'<iframe src="data:application/pdf;base64,{b64}" '
+        f'<iframe src="{pdf_url}" '
         f'width="100%" height="{height}" type="application/pdf" '
         f'style="border: 1px solid #dee2e6; border-radius: 6px;"></iframe>'
     )
     st.markdown(pdf_iframe, unsafe_allow_html=True)
+
 
 
 # ---------------------------------------------------------------------
@@ -177,20 +197,59 @@ tab_paper, tab_findings, tab_figs, tab_methods, tab_about = st.tabs(
 with tab_paper:
     st.markdown("### Full paper")
     st.caption(
-        "21 pages, 14 figures, 8 tables. Embedded PDF below; download "
-        "button in the sidebar."
+        "21 pages, 14 figures, 8 tables. The embedded PDF below is "
+        "served directly from GitHub; if your browser blocks the embed, "
+        "use one of the fallback options."
     )
 
+    # Top: prominent action buttons (always visible — never blocked)
+    c1, c2, c3 = st.columns([1.2, 1.2, 1.6])
+    with c1:
+        if PDF_PATH.exists():
+            with open(PDF_PATH, "rb") as f:
+                st.download_button(
+                    label="⬇️ Download PDF",
+                    data=f.read(),
+                    file_name="marketlab_paper.pdf",
+                    mime="application/pdf",
+                    use_container_width=True,
+                    key="paper_tab_dl",
+                )
+    with c2:
+        st.link_button(
+            "🔗 Open in new tab",
+            GITHUB_PDF_RAW_URL,
+            use_container_width=True,
+        )
+    with c3:
+        st.link_button(
+            "📁 View on GitHub",
+            GITHUB_PDF_BLOB_URL,
+            use_container_width=True,
+        )
+
+    st.markdown("---")
+    st.markdown("#### Inline preview")
+
     if PDF_PATH.exists():
+        # Strategy 1: load PDF from GitHub raw URL (avoids Chrome
+        # blocking large base64 data URIs)
         try:
-            pdf_bytes = load_pdf_bytes(PDF_PATH)
-            render_pdf_inline(pdf_bytes, height=900)
+            render_pdf_via_github_url(GITHUB_PDF_RAW_URL, height=900)
         except Exception as e:
-            st.error(f"Could not embed PDF inline. Error: {e}")
-            st.info(
-                "Use the download button in the sidebar to view the PDF "
-                "in your browser."
+            st.warning(
+                f"Could not embed PDF inline: {e}. "
+                "Use the buttons above to download or open in new tab."
             )
+
+        st.markdown(
+            "<small style='color:#666'>If the inline preview is blocked "
+            "by your browser (Chrome occasionally blocks PDF iframes for "
+            "security reasons), please use the **Download PDF** or "
+            "**Open in new tab** buttons above. The paper renders "
+            "perfectly in any standalone PDF viewer.</small>",
+            unsafe_allow_html=True,
+        )
     else:
         st.error(
             f"PDF not found at expected path: `{PDF_PATH}`. "
