@@ -1,4 +1,3 @@
-
 """
 MarketLab Paper Viewer
 A Streamlit application showcasing the research paper:
@@ -36,81 +35,117 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+    /* ---------- BASE THEME (light, professional) ---------- */
+    .stApp {
+        background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+    }
+
     /* Layout */
     .main .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
+        padding-top: 2rem;
+        padding-bottom: 3rem;
         max-width: 1180px;
     }
 
-    /* Headings */
+    /* ---------- TYPOGRAPHY ---------- */
     h1 {
         color: #0f2540;
         font-weight: 700;
         letter-spacing: -0.02em;
+        font-size: 2.4rem !important;
+        line-height: 1.15;
     }
     h2, h3, h4 {
         color: #1f3a5f;
         font-weight: 600;
     }
+    h2 { font-size: 1.7rem !important; margin-top: 1.5rem; }
+    h3 { font-size: 1.3rem !important; }
+    h4 { font-size: 1.1rem !important; }
 
-    /* Hero subtitle */
+    p, li, td, th {
+        color: #2d3748;
+        line-height: 1.65;
+    }
+
+    /* ---------- HERO ---------- */
     .hero-subtitle {
         color: #4a5568;
-        font-size: 1.15rem;
+        font-size: 1.2rem;
         font-weight: 400;
-        margin-top: -0.5rem;
+        margin-top: -0.3rem;
         margin-bottom: 0.8rem;
+        line-height: 1.4;
     }
     .hero-author {
         color: #718096;
         font-size: 0.95rem;
         margin-bottom: 1.2rem;
+        font-weight: 500;
+    }
+    .hero-author strong {
+        color: #1f3a5f;
     }
 
-    /* Badges */
+    /* ---------- BADGES ---------- */
     .badge {
         display: inline-block;
-        padding: 0.25rem 0.7rem;
-        border-radius: 14px;
+        padding: 0.3rem 0.85rem;
+        border-radius: 16px;
         font-size: 0.78em;
-        font-weight: 500;
-        margin-right: 0.35rem;
-        margin-bottom: 0.3rem;
-        background: linear-gradient(135deg, #1f3a5f 0%, #2d4a6f 100%);
+        font-weight: 600;
+        margin-right: 0.4rem;
+        margin-bottom: 0.4rem;
+        background: linear-gradient(135deg, #1f3a5f 0%, #2d4a78 100%);
         color: white;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.03em;
+        box-shadow: 0 2px 4px rgba(15, 37, 64, 0.15);
     }
     .badge-outline {
-        background: transparent;
+        background: white;
         color: #1f3a5f;
-        border: 1px solid #1f3a5f;
+        border: 1.5px solid #1f3a5f;
+        box-shadow: 0 1px 2px rgba(15, 37, 64, 0.08);
+    }
+    .badge-accent {
+        background: linear-gradient(135deg, #d97706 0%, #ea8c0a 100%);
+        color: white;
     }
 
-    /* Metric cards */
+    /* ---------- METRIC CARDS ---------- */
     [data-testid="stMetric"] {
-        background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
-        padding: 1rem 1.2rem;
-        border-radius: 10px;
+        background: white;
+        padding: 1.2rem 1.4rem;
+        border-radius: 12px;
         border-left: 4px solid #1f3a5f;
-        box-shadow: 0 1px 3px rgba(15, 37, 64, 0.06);
+        box-shadow: 0 2px 8px rgba(15, 37, 64, 0.08);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(15, 37, 64, 0.12);
     }
     [data-testid="stMetricLabel"] {
         font-size: 0.85rem !important;
         color: #4a5568 !important;
-        font-weight: 500;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
     [data-testid="stMetricValue"] {
-        font-size: 1.4rem !important;
+        font-size: 1.45rem !important;
         color: #0f2540 !important;
         font-weight: 700;
     }
+    [data-testid="stMetricDelta"] {
+        font-size: 0.85rem !important;
+    }
 
-    /* Citation block */
+    /* ---------- CITATION BLOCK ---------- */
     .citation-block {
         background: #f8f9fa;
         padding: 1rem;
-        border-radius: 6px;
+        border-radius: 8px;
         font-family: 'SFMono-Regular', 'Courier New', monospace;
         font-size: 0.82em;
         white-space: pre-wrap;
@@ -118,15 +153,20 @@ st.markdown(
         line-height: 1.5;
     }
 
-    /* Tabs */
+    /* ---------- TABS ---------- */
     .stTabs [data-baseweb="tab-list"] {
         gap: 4px;
         border-bottom: 2px solid #e2e8f0;
+        background: transparent;
     }
     .stTabs [data-baseweb="tab-list"] button {
-        padding: 0.6rem 1.1rem;
-        border-radius: 8px 8px 0 0;
+        padding: 0.75rem 1.3rem;
+        border-radius: 10px 10px 0 0;
         background: transparent;
+        transition: all 0.15s ease;
+    }
+    .stTabs [data-baseweb="tab-list"] button:hover {
+        background: #f0f4fa;
     }
     .stTabs [data-baseweb="tab-list"] button [data-testid="stMarkdownContainer"] p {
         font-size: 1.0rem;
@@ -134,74 +174,196 @@ st.markdown(
         color: #4a5568;
     }
     .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] {
-        background: #f0f4fa;
+        background: linear-gradient(180deg, #f0f4fa 0%, #e6edf7 100%);
         border-bottom: 3px solid #1f3a5f;
     }
     .stTabs [data-baseweb="tab-list"] button[aria-selected="true"] [data-testid="stMarkdownContainer"] p {
         color: #1f3a5f;
-        font-weight: 600;
+        font-weight: 700;
     }
 
-    /* Buttons */
-    .stButton button, .stDownloadButton button, .stLinkButton a {
-        border-radius: 8px;
-        font-weight: 500;
+    /* ---------- BUTTONS / LINKS ---------- */
+    .stButton button, .stDownloadButton button {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 0.55rem 1rem;
         transition: all 0.15s ease;
+        border: 1.5px solid #1f3a5f;
+        background: white;
+        color: #1f3a5f;
     }
     .stButton button:hover, .stDownloadButton button:hover {
+        background: #1f3a5f;
+        color: white;
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(15, 37, 64, 0.15);
+        box-shadow: 0 4px 12px rgba(15, 37, 64, 0.2);
     }
 
-    /* Page navigator */
-    .page-indicator {
-        text-align: center;
-        font-weight: 600;
-        font-size: 1.05rem;
+    .stLinkButton a {
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        padding: 0.55rem 1rem !important;
+        transition: all 0.15s ease !important;
+        border: 1.5px solid #1f3a5f !important;
+        background: white !important;
+        color: #1f3a5f !important;
+        text-decoration: none !important;
+    }
+    .stLinkButton a:hover {
+        background: #1f3a5f !important;
+        color: white !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(15, 37, 64, 0.2);
+    }
+
+    /* ---------- CONTACT CARD ---------- */
+    .contact-card {
+        background: white;
+        padding: 1.2rem 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid #d97706;
+        box-shadow: 0 2px 8px rgba(15, 37, 64, 0.08);
+        margin-bottom: 1rem;
+    }
+    .contact-card a {
         color: #1f3a5f;
-        padding: 0.5rem 0;
-        background: #f0f4fa;
-        border-radius: 8px;
-        margin: 0;
+        font-weight: 600;
+        text-decoration: none;
+        word-break: break-all;
+    }
+    .contact-card a:hover {
+        text-decoration: underline;
     }
 
-    /* Section dividers */
+    /* ---------- SECTION DIVIDERS ---------- */
     hr {
-        margin: 2rem 0 1.5rem 0;
+        margin: 2.2rem 0 1.5rem 0;
         border: none;
         border-top: 1px solid #e2e8f0;
     }
 
-    /* Sidebar */
+    /* ---------- SIDEBAR ---------- */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+        border-right: 1px solid #e2e8f0;
+    }
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h4 {
+        color: #0f2540;
     }
     [data-testid="stSidebar"] h2 {
-        color: #0f2540;
         margin-top: 0;
+        font-size: 1.4rem !important;
+    }
+    [data-testid="stSidebar"] h4 {
+        font-size: 0.9rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #4a5568;
+        margin-top: 1.2rem;
+        margin-bottom: 0.4rem;
+    }
+    [data-testid="stSidebar"] a {
+        color: #1f3a5f;
+        font-weight: 500;
+        text-decoration: none;
+    }
+    [data-testid="stSidebar"] a:hover {
+        text-decoration: underline;
+    }
+    [data-testid="stSidebar"] .stDownloadButton button {
+        background: linear-gradient(135deg, #1f3a5f 0%, #2d4a78 100%);
+        color: white;
+        border: none;
+    }
+    [data-testid="stSidebar"] .stDownloadButton button:hover {
+        background: linear-gradient(135deg, #0f2540 0%, #1f3a5f 100%);
+        color: white;
     }
 
-    /* Info boxes */
+    /* ---------- INFO / ALERT BOXES ---------- */
     [data-testid="stAlert"] {
-        border-radius: 8px;
+        border-radius: 10px;
+        border-left-width: 4px;
     }
 
-    /* Tables */
+    /* ---------- TABLES ---------- */
     table {
-        font-size: 0.92em;
+        font-size: 0.93em;
+        border-collapse: collapse;
+        margin: 1rem 0;
     }
     table th {
-        background: #f0f4fa;
+        background: linear-gradient(180deg, #f0f4fa 0%, #e6edf7 100%);
         color: #1f3a5f;
         font-weight: 600;
+        padding: 0.7rem 1rem;
+        text-align: left;
+        border-bottom: 2px solid #1f3a5f;
+    }
+    table td {
+        padding: 0.6rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    table tr:nth-child(even) {
+        background: #f8fafc;
+    }
+    table tr:hover {
+        background: #f0f4fa;
     }
 
-    /* Captions */
+    /* ---------- IMAGES ---------- */
+    [data-testid="stImage"] {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(15, 37, 64, 0.08);
+        background: white;
+    }
+
+    /* ---------- PAGE NUMBER LABEL (in scroll mode) ---------- */
+    .page-label {
+        background: linear-gradient(135deg, #1f3a5f 0%, #2d4a78 100%);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 8px;
+        display: inline-block;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin: 1rem 0 0.5rem 0;
+        box-shadow: 0 2px 6px rgba(15, 37, 64, 0.15);
+    }
+
+    /* ---------- CAPTIONS ---------- */
     .caption {
         color: #718096;
         font-size: 0.88rem;
         font-style: italic;
         margin-top: 0.4rem;
+    }
+
+    /* ---------- CODE BLOCKS ---------- */
+    .stCodeBlock {
+        border-radius: 8px;
+    }
+    code {
+        background: #f0f4fa !important;
+        color: #1f3a5f !important;
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+        font-size: 0.92em;
+    }
+
+    /* ---------- LINKS in markdown ---------- */
+    .main a {
+        color: #1f3a5f;
+        font-weight: 500;
+        text-decoration: none;
+        border-bottom: 1px solid #cbd5e0;
+        transition: all 0.15s ease;
+    }
+    .main a:hover {
+        color: #d97706;
+        border-bottom-color: #d97706;
     }
     </style>
     """,
@@ -217,12 +379,6 @@ FIGURES     = ASSETS / "figures"
 PAPER_PAGES = ASSETS / "paper_pages"
 PDF_PATH    = ASSETS / "marketlab_paper.pdf"
 
-# =====================================================================
-#  SESSION STATE INITIALIZATION
-# =====================================================================
-if "current_page" not in st.session_state:
-    st.session_state.current_page = 1
-
 
 # =====================================================================
 #  HELPERS
@@ -237,26 +393,6 @@ def list_paper_pages() -> list:
     if not PAPER_PAGES.exists():
         return []
     return sorted(PAPER_PAGES.glob("page-*.png"))
-
-
-def go_to_prev_page(n_pages: int):
-    """Callback for Previous button — fires before next render, so safe."""
-    if st.session_state.current_page > 1:
-        st.session_state.current_page -= 1
-
-
-def go_to_next_page(n_pages: int):
-    """Callback for Next button — fires before next render, so safe."""
-    if st.session_state.current_page < n_pages:
-        st.session_state.current_page += 1
-
-
-def go_to_first(n_pages: int):
-    st.session_state.current_page = 1
-
-
-def go_to_last(n_pages: int):
-    st.session_state.current_page = n_pages
 
 
 # =====================================================================
@@ -336,8 +472,8 @@ st.markdown(
 )
 
 st.markdown(
-    '<p class="hero-author"><strong>Anzar Shaikh</strong> — '
-    'University of Mumbai — April 2026</p>',
+    '<p class="hero-author"><strong>Anzar Shaikh</strong> &nbsp;·&nbsp; '
+    'University of Mumbai &nbsp;·&nbsp; April 2026</p>',
     unsafe_allow_html=True,
 )
 st.markdown("---")
@@ -351,7 +487,7 @@ tab_paper, tab_findings, tab_figs, tab_methods, tab_about = st.tabs(
 )
 
 # =====================================================================
-#  TAB 1: PAPER VIEWER
+#  TAB 1: PAPER VIEWER (full scroll-through, all 21 pages)
 # =====================================================================
 with tab_paper:
     st.markdown("### Full paper")
@@ -373,19 +509,13 @@ with tab_paper:
                     mime="application/pdf",
                 )
     else:
-        # Clamp current_page to valid range (defensive)
-        if st.session_state.current_page > n_pages:
-            st.session_state.current_page = n_pages
-        if st.session_state.current_page < 1:
-            st.session_state.current_page = 1
-
         st.caption(
-            "21 pages, 14 figures, 8 tables. Use the controls below to "
-            "navigate or scroll through all pages."
+            f"All {n_pages} pages are displayed below. Scroll to read; "
+            "use the Download PDF button to save the paper."
         )
 
         # Top action buttons
-        c1, c2, c3 = st.columns(3)
+        c1, c2 = st.columns(2)
         with c1:
             if PDF_PATH.exists():
                 with open(PDF_PATH, "rb") as f:
@@ -403,105 +533,18 @@ with tab_paper:
                 "https://github.com/anzr101/marketlab-event_aware",
                 use_container_width=True,
             )
-        with c3:
-            st.link_button(
-                "📧 Email author",
-                "mailto:anzarsk098@gmail.com?subject=MarketLab paper",
-                use_container_width=True,
-            )
 
         st.markdown("---")
 
-        # View mode selector
-        view_mode = st.radio(
-            "View mode",
-            options=["📖 Single page", "📚 All pages (scroll)"],
-            horizontal=True,
-            label_visibility="collapsed",
-        )
-
-        if view_mode == "📖 Single page":
-            page_num = st.session_state.current_page
-
-            # Navigation controls — using on_click callbacks (the correct pattern)
-            nav_cols = st.columns([1, 1, 2.5, 1, 1])
-            with nav_cols[0]:
-                st.button(
-                    "⏮️ First",
-                    use_container_width=True,
-                    disabled=(page_num == 1),
-                    key="btn_first",
-                    on_click=go_to_first,
-                    args=(n_pages,),
-                )
-            with nav_cols[1]:
-                st.button(
-                    "⬅️ Previous",
-                    use_container_width=True,
-                    disabled=(page_num == 1),
-                    key="btn_prev",
-                    on_click=go_to_prev_page,
-                    args=(n_pages,),
-                )
-            with nav_cols[2]:
-                st.markdown(
-                    f'<div class="page-indicator">'
-                    f'Page {page_num} of {n_pages}'
-                    f'</div>',
-                    unsafe_allow_html=True,
-                )
-            with nav_cols[3]:
-                st.button(
-                    "Next ➡️",
-                    use_container_width=True,
-                    disabled=(page_num == n_pages),
-                    key="btn_next",
-                    on_click=go_to_next_page,
-                    args=(n_pages,),
-                )
-            with nav_cols[4]:
-                st.button(
-                    "Last ⏭️",
-                    use_container_width=True,
-                    disabled=(page_num == n_pages),
-                    key="btn_last",
-                    on_click=go_to_last,
-                    args=(n_pages,),
-                )
-
-            # Optional: jump-to-page selectbox below nav row (no slider conflict)
-            jump_col1, jump_col2, jump_col3 = st.columns([1, 1, 1])
-            with jump_col2:
-                jump = st.selectbox(
-                    "Jump to page",
-                    options=list(range(1, n_pages + 1)),
-                    index=page_num - 1,
-                    key="page_jump",
-                    label_visibility="collapsed",
-                )
-                if jump != page_num:
-                    st.session_state.current_page = jump
-                    st.rerun()
-
-            st.markdown("")
-
-            # Render the current page image
-            st.image(
-                str(pages[page_num - 1]),
-                use_container_width=True,
+        # Render all pages sequentially
+        for i, page_path in enumerate(pages, start=1):
+            st.markdown(
+                f'<div class="page-label">Page {i} of {n_pages}</div>',
+                unsafe_allow_html=True,
             )
-
-        else:
-            # Scroll-all mode
-            st.info(
-                "📜 Showing all 21 pages. Scroll to read top-to-bottom; "
-                "use the sidebar Download button to save the PDF."
-            )
-            for i, page_path in enumerate(pages, start=1):
-                st.markdown(f"**Page {i} of {n_pages}**")
-                st.image(str(page_path), use_container_width=True)
-                if i < n_pages:
-                    st.markdown("---")
+            st.image(str(page_path), use_container_width=True)
+            if i < n_pages:
+                st.markdown("")
 
 # =====================================================================
 #  TAB 2: HEADLINE FINDINGS
@@ -755,20 +798,29 @@ with tab_about:
 
     st.markdown("### Contact")
     st.markdown(
-        "**Author:** Anzar Shaikh  \n"
-        "**Email:** [anzarsk098@gmail.com](mailto:anzarsk098@gmail.com)  \n"
-        "**ORCID:** "
-        "[0009-0005-7844-5792](https://orcid.org/0009-0005-7844-5792)  \n"
-        "**GitHub:** "
-        "[anzr101/marketlab-event_aware]"
-        "(https://github.com/anzr101/marketlab-event_aware)"
+        '<div class="contact-card">'
+        '<strong>Author:</strong> Anzar Shaikh<br>'
+        '<strong>Email:</strong> '
+        '<a href="mailto:anzarsk098@gmail.com">anzarsk098@gmail.com</a><br>'
+        '<strong>ORCID:</strong> '
+        '<a href="https://orcid.org/0009-0005-7844-5792" target="_blank">'
+        '0009-0005-7844-5792</a><br>'
+        '<strong>GitHub:</strong> '
+        '<a href="https://github.com/anzr101/marketlab-event_aware" '
+        'target="_blank">anzr101/marketlab-event_aware</a>'
+        '</div>',
+        unsafe_allow_html=True,
     )
 
     st.markdown("### Press and media")
     st.markdown(
-        "For media enquiries, please email "
-        "[anzarsk098@gmail.com](mailto:anzarsk098@gmail.com) with "
-        "subject *MarketLab — Press*."
+        '<div class="contact-card">'
+        'For media enquiries, please write to '
+        '<a href="mailto:anzarsk098@gmail.com?subject=MarketLab%20%E2%80%94%20Press">'
+        'anzarsk098@gmail.com</a> with subject '
+        '<strong>MarketLab — Press</strong>.'
+        '</div>',
+        unsafe_allow_html=True,
     )
 
     st.markdown("### Citation")
@@ -790,4 +842,3 @@ with tab_about:
         "App built with Streamlit. Last updated April 2026. "
         "© 2026 Anzar Shaikh. Paper licensed CC BY 4.0."
     )
-
